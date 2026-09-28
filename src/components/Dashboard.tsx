@@ -41,7 +41,6 @@ import { auth, db } from '../firebase';
 import { UserProfile } from '../types';
 import { 
   MICROSOFT_STORE_URL,
-  PLAY_STORE_URL, 
   getShareMessage,
   getWhatsAppShareMessage, 
   generateUserReferralCode,
@@ -49,6 +48,7 @@ import {
   getCurrentISTMonthName
 } from '../lib/referral';
 import { DeleteAccountModal } from './DeleteAccountModal';
+import { MicrosoftStoreIcon } from './MicrosoftStoreIcon';
 
 interface DashboardProps {
   user: UserProfile;
@@ -552,21 +552,31 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsers
             </button>
           </div>
 
+          <a
+            id="open-microsoft-store-btn"
+            href={MICROSOFT_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-2 rounded-xl bg-white text-slate-900 hover:bg-slate-100 active:scale-[0.99] py-2.5 px-3 text-xs font-bold transition-all shadow-sm"
+          >
+            <MicrosoftStoreIcon className="w-4 h-4" />
+            <span>Open in Microsoft Store</span>
+            <ExternalLink className="h-3.5 w-3.5 text-slate-400" />
+          </a>
+
           <button
             id="copy-store-link-btn"
             onClick={copyStoreLink}
             className="w-full flex items-center justify-center gap-1.5 py-1 text-xs font-medium text-indigo-200 hover:text-white transition-colors cursor-pointer"
           >
+            <MicrosoftStoreIcon className="w-3.5 h-3.5 opacity-80" />
             {copiedLink ? (
               <>
                 <CheckCheck className="h-3.5 w-3.5 text-emerald-300" />
                 <span className="text-emerald-200">Microsoft Store Link Copied</span>
               </>
             ) : (
-              <>
-                <ExternalLink className="h-3.5 w-3.5 text-indigo-300" />
-                <span>Copy direct Microsoft Store URL</span>
-              </>
+              <span>Copy Microsoft Store Link</span>
             )}
           </button>
         </div>
@@ -697,10 +707,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsers
             href={MICROSOFT_STORE_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-700"
+            className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-800 bg-white hover:bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200 shadow-2xs transition-all"
           >
+            <MicrosoftStoreIcon className="w-3.5 h-3.5" />
             <span>Microsoft Store</span>
-            <ExternalLink className="h-3 w-3" />
+            <ExternalLink className="h-3 w-3 text-slate-400" />
           </a>
         </div>
 

@@ -1,6 +1,8 @@
 import React from 'react';
-import { Trophy, LogOut, Sparkles, Flame, ShieldCheck } from 'lucide-react';
+import { Trophy, LogOut, Sparkles, Flame, ShieldCheck, ExternalLink } from 'lucide-react';
 import { UserProfile } from '../types';
+import { MICROSOFT_STORE_URL } from '../lib/referral';
+import { MicrosoftStoreIcon } from './MicrosoftStoreIcon';
 
 interface NavbarProps {
   user: UserProfile | null;
@@ -14,10 +16,8 @@ export const Navbar: React.FC<NavbarProps> = ({ user, onSignOut, onOpenAuth }) =
       <div className="mx-auto flex h-18 max-w-6xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Brand Logo & Title - Bento Header Theme */}
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-indigo-600 shadow-sm shadow-indigo-200 text-white font-bold">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
+          <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-900 shadow-sm text-white font-bold">
+            <MicrosoftStoreIcon className="w-5 h-5" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -33,6 +33,17 @@ export const Navbar: React.FC<NavbarProps> = ({ user, onSignOut, onOpenAuth }) =
 
         {/* User Status / Actions */}
         <div className="flex items-center gap-3">
+          <a
+            id="nav-microsoft-store-btn"
+            href={MICROSOFT_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 shadow-2xs transition-colors"
+          >
+            <MicrosoftStoreIcon className="w-3.5 h-3.5" />
+            <span>Microsoft Store</span>
+            <ExternalLink className="w-3 h-3 text-slate-400" />
+          </a>
           {user ? (
             <div className="flex items-center gap-3 bg-white p-1.5 sm:pr-4 rounded-full border border-slate-200 shadow-xs">
               {/* Avatar */}

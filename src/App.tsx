@@ -16,8 +16,9 @@ import { Navbar } from './components/Navbar';
 import { LandingAuth } from './components/LandingAuth';
 import { Dashboard } from './components/Dashboard';
 import { Leaderboard } from './components/Leaderboard';
-import { generateUserReferralCode, getCurrentISTMonthKey, getCurrentISTMonthName } from './lib/referral';
-import { Sparkles, Trophy, HeartHandshake, Shield, Laptop } from 'lucide-react';
+import { generateUserReferralCode, getCurrentISTMonthKey, getCurrentISTMonthName, MICROSOFT_STORE_URL } from './lib/referral';
+import { Sparkles, Trophy, HeartHandshake, Shield, Laptop, ExternalLink } from 'lucide-react';
+import { MicrosoftStoreIcon } from './components/MicrosoftStoreIcon';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
@@ -249,6 +250,21 @@ export default function App() {
               Support the app on Microsoft Store, invite friends, and climb the {currentISTMonthName} rankings. Resets monthly!
             </p>
           </div>
+
+          <a
+            id="hero-microsoft-store-btn"
+            href={MICROSOFT_STORE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2.5 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-2xl text-xs font-bold shadow-xs hover:shadow transition-all shrink-0 cursor-pointer"
+          >
+            <MicrosoftStoreIcon className="w-4 h-4" />
+            <div className="text-left leading-none">
+              <span className="text-[10px] text-slate-400 block font-normal">GET APP ON</span>
+              <span className="text-xs font-bold block text-white mt-0.5">Microsoft Store</span>
+            </div>
+            <ExternalLink className="h-3.5 w-3.5 text-slate-400 ml-0.5" />
+          </a>
         </div>
 
         {/* Dynamic Bento Grid Layout: Auth/Dashboard (4 cols) & Leaderboard (8 cols) */}
@@ -295,6 +311,18 @@ export default function App() {
                         <strong className="text-slate-800">Earn +1 Point:</strong> When friends redeem your code, +1 point is awarded for the current month!
                       </p>
                     </div>
+
+                    <a
+                      id="how-it-works-microsoft-store-btn"
+                      href={MICROSOFT_STORE_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 w-full flex items-center justify-center gap-2 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white py-3 px-4 text-xs font-bold transition-all shadow-xs"
+                    >
+                      <MicrosoftStoreIcon className="w-4 h-4" />
+                      <span>Download on Microsoft Store</span>
+                      <ExternalLink className="h-3.5 w-3.5 text-slate-400" />
+                    </a>
                   </div>
                 </div>
               </div>
