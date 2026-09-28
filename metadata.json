@@ -1,0 +1,8 @@
+{
+  "name": "Remix Community App Leaderboard",
+  "description": "A live community leaderboard tracking real app downloads, user points, and referrals with Firebase Authentication and Firestore.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

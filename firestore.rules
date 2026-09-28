@@ -1,0 +1,23 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global public read access for community leaderboard transparency
+    match /{document=**} {
+      allow read: if true;
+    }
+
+    // User profiles & community leaderboard records
+    match /users/{userId} {
+      allow read: if true;
+      allow create, update: if request.auth != null;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+
+    // Monthly Leaderboard archives (subcollection per IST month: e.g. 2026-08)
+    match /monthly_leaderboard/{monthKey}/users/{userId} {
+      allow read: if true;
+      allow create, update: if request.auth != null;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

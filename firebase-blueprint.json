@@ -1,0 +1,17 @@
+{
+  "entities": {
+    "User": {
+      "collection": "users",
+      "fields": {
+        "id": { "type": "string", "description": "Firebase Auth UID" },
+        "name": { "type": "string", "description": "Display name entered by the user" },
+        "email": { "type": "string", "description": "Google email of the user" },
+        "points": { "type": "number", "description": "Current total leaderboard points" },
+        "photoURL": { "type": "string", "description": "User Google avatar image URL" },
+        "shareCount": { "type": "number", "description": "Total times user shared the app link" },
+        "createdAt": { "type": "timestamp", "description": "Timestamp when user profile was created" },
+        "updatedAt": { "type": "timestamp", "description": "Timestamp when profile was last updated" }
+      }
+    }
+  }
+}
