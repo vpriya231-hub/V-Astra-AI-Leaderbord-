@@ -26,7 +26,7 @@ export const Navbar: React.FC<NavbarProps> = ({ user, onSignOut, onOpenAuth }) =
               </h1>
             </div>
             <p className="text-[11px] text-slate-500 hidden sm:block">
-              Live Google Play downloads & community activity
+              Live app downloads & community referral activity
             </p>
           </div>
         </div>

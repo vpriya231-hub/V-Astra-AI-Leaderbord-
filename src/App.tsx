@@ -17,7 +17,7 @@ import { LandingAuth } from './components/LandingAuth';
 import { Dashboard } from './components/Dashboard';
 import { Leaderboard } from './components/Leaderboard';
 import { generateUserReferralCode, getCurrentISTMonthKey, getCurrentISTMonthName } from './lib/referral';
-import { Sparkles, Trophy, HeartHandshake, Shield, Smartphone } from 'lucide-react';
+import { Sparkles, Trophy, HeartHandshake, Shield, Laptop } from 'lucide-react';
 
 export default function App() {
   const [currentUser, setCurrentUser] = useState<UserProfile | null>(null);
@@ -246,7 +246,7 @@ export default function App() {
               Community Download & Referral Leaderboard
             </h1>
             <p className="mt-1 text-xs sm:text-sm text-slate-500">
-              Support the app on Google Play Store, invite friends, and climb the {currentISTMonthName} rankings. Resets monthly!
+              Support the app on Microsoft Store, invite friends, and climb the {currentISTMonthName} rankings. Resets monthly!
             </p>
           </div>
         </div>
@@ -284,7 +284,7 @@ export default function App() {
                         2
                       </div>
                       <p className="text-xs text-slate-600 leading-normal">
-                        <strong className="text-slate-800">Share with Friends:</strong> Send the Play Store link & your code via WhatsApp.
+                        <strong className="text-slate-800">Share with Friends:</strong> Send the Microsoft Store link & your code via WhatsApp or Telegram.
                       </p>
                     </div>
                     <div className="flex items-start gap-3 bg-white p-3 rounded-2xl border border-slate-200">

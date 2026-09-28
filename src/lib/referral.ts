@@ -2,8 +2,9 @@
  * Helper utilities for referral codes and sharing
  */
 
-export const PLAY_STORE_URL = 'https://play.google.com/store/apps/details?id=com.vastraai.app';
-export const LEADERBOARD_WEB_URL = 'https://v-astra-leaderboard.ai.studio';
+export const MICROSOFT_STORE_URL = 'https://apps.microsoft.com/store/detail/9NR87WK2VV23?cid=DevShareMCLPCS';
+export const PLAY_STORE_URL = MICROSOFT_STORE_URL; // Backward-compatible alias
+export const LEADERBOARD_WEB_URL = 'https://v-astra-ai-leaderbord.onrender.com';
 
 /**
  * Helper to get current Indian Standard Time (IST) Month Key (e.g. "2026-08")
@@ -50,21 +51,27 @@ export function generateUserReferralCode(userId: string): string {
 }
 
 /**
- * Build pre-filled English share message with both links and unique code in the exact specified format
+ * Build pre-filled English share message with both links and unique code in the exact required format:
+ *
+ * Hey! Check out this amazing app:
+ * 💻 Download App (Microsoft Store): https://apps.microsoft.com/store/detail/9NR87WK2VV23?cid=DevShareMCLPCS
+ * 🎁 Use my referral code: [USER_UNIQUE_CODE]
+ * 🌐 After installing, paste my code here to help me win the leaderboard: https://v-astra-ai-leaderbord.onrender.com
  */
-export function getWhatsAppShareMessage(referralCode: string): string {
+export function getShareMessage(referralCode: string): string {
   return `Hey! Check out this amazing app:
-📲 Download App (Play Store): ${PLAY_STORE_URL}
-
+💻 Download App (Microsoft Store): https://apps.microsoft.com/store/detail/9NR87WK2VV23?cid=DevShareMCLPCS
 🎁 Use my referral code: ${referralCode}
-
-🌐 After installing, paste my code here to help me win the leaderboard: ${LEADERBOARD_WEB_URL}`;
+🌐 After installing, paste my code here to help me win the leaderboard: https://v-astra-ai-leaderbord.onrender.com`;
 }
 
 /**
- * Build pre-filled English generic share message
+ * Backwards-compatible aliases
  */
-export function getGenericShareMessage(referralCode: string): string {
-  return getWhatsAppShareMessage(referralCode);
+export function getWhatsAppShareMessage(referralCode: string): string {
+  return getShareMessage(referralCode);
 }
 
+export function getGenericShareMessage(referralCode: string): string {
+  return getShareMessage(referralCode);
+}

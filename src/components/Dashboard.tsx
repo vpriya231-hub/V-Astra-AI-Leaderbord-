@@ -40,7 +40,9 @@ import { deleteUser, signOut } from 'firebase/auth';
 import { auth, db } from '../firebase';
 import { UserProfile } from '../types';
 import { 
+  MICROSOFT_STORE_URL,
   PLAY_STORE_URL, 
+  getShareMessage,
   getWhatsAppShareMessage, 
   generateUserReferralCode,
   getCurrentISTMonthKey,
@@ -56,6 +58,7 @@ interface DashboardProps {
 
 export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsersCount }) => {
   const [copiedCode, setCopiedCode] = useState(false);
+  const [copiedMessage, setCopiedMessage] = useState(false);
   const [copiedLink, setCopiedLink] = useState(false);
   const [isEditingName, setIsEditingName] = useState(false);
   const [newName, setNewName] = useState(user.name);
@@ -75,8 +78,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsers
 
   const currentMonthKey = getCurrentISTMonthKey();
   const currentMonthName = getCurrentISTMonthName(currentMonthKey);
-  const referralCode = user.referralCode || generateUserReferralCode(user.id);
-  const shareMessageText = getWhatsAppShareMessage(referralCode);
+  const referralCode = user.uniqueCode || user.referralCode || generateUserReferralCode(user.id);
+  const shareMessageText = getShareMessage(referralCode);
 
   // Points earned specifically in current IST month vs Lifetime
   const currentMonthPoints = user.monthlyPoints?.[currentMonthKey] ?? (user.currentMonthKey === currentMonthKey ? (user.currentMonthPoints ?? user.points) : 0);
@@ -101,10 +104,18 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsers
     setTimeout(() => setCopiedCode(false), 2500);
   };
 
-  const copyPlayStoreLink = () => {
-    navigator.clipboard.writeText(PLAY_STORE_URL);
+  const copyFullShareMessage = () => {
+    navigator.clipboard.writeText(shareMessageText);
+    setCopiedMessage(true);
+    setShareSuccessAlert('Share message with links & your code copied to clipboard!');
+    setTimeout(() => setCopiedMessage(false), 2500);
+    setTimeout(() => setShareSuccessAlert(null), 3500);
+  };
+
+  const copyStoreLink = () => {
+    navigator.clipboard.writeText(MICROSOFT_STORE_URL);
     setCopiedLink(true);
-    setShareSuccessAlert('Official Play Store link copied!');
+    setShareSuccessAlert('Microsoft Store link copied!');
     setTimeout(() => setCopiedLink(false), 2500);
     setTimeout(() => setShareSuccessAlert(null), 3500);
   };
@@ -115,30 +126,30 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsers
     window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
   };
 
+  const handleTelegramShare = () => {
+    fireCelebration();
+    const telegramUrl = `https://t.me/share/url?text=${encodeURIComponent(shareMessageText)}`;
+    window.open(telegramUrl, '_blank', 'noopener,noreferrer');
+  };
+
   const handleNativeShare = async () => {
     fireCelebration();
     if (navigator.share) {
       try {
         await navigator.share({
-          title: 'Download Vastra AI App',
+          title: 'Check out this amazing app',
           text: shareMessageText,
         });
         setShareSuccessAlert('Thank you for sharing with your community!');
         setTimeout(() => setShareSuccessAlert(null), 4000);
       } catch (err: any) {
         if (err.name !== 'AbortError') {
-          copyReferralCode();
+          copyFullShareMessage();
         }
       }
     } else {
-      copyReferralCode();
+      copyFullShareMessage();
     }
-  };
-
-  const handleTelegramShare = () => {
-    fireCelebration();
-    const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(PLAY_STORE_URL)}&text=${encodeURIComponent(shareMessageText)}`;
-    window.open(telegramUrl, '_blank', 'noopener,noreferrer');
   };
 
   const handleSaveName = async (e: React.FormEvent) => {
@@ -450,7 +461,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsers
         </div>
       </div>
 
-      {/* Bento Card 2: Unique Referral Code & One-Tap WhatsApp Share */}
+      {/* Bento Card 2: Unique Referral Code & One-Tap WhatsApp / Telegram Share */}
       <div 
         id="unique-referral-card"
         className="bg-indigo-600 text-white border border-indigo-700 rounded-3xl p-6 shadow-lg shadow-indigo-200/50 flex flex-col justify-between gap-5"
@@ -489,6 +500,24 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsers
               )}
             </button>
           </div>
+
+          {/* Share Message Live Preview */}
+          <div className="mt-3 bg-indigo-950/30 border border-indigo-400/25 rounded-2xl p-3 text-[11px] text-indigo-100 leading-relaxed space-y-1">
+            <div className="flex items-center justify-between text-[10px] font-bold uppercase tracking-wider text-indigo-300 border-b border-indigo-400/20 pb-1.5 mb-1.5">
+              <span>English Share Message Format</span>
+              <button
+                type="button"
+                onClick={copyFullShareMessage}
+                className="hover:text-white flex items-center gap-1 text-[10px] lowercase cursor-pointer"
+              >
+                {copiedMessage ? <Check className="w-3 h-3 text-emerald-300" /> : <Copy className="w-3 h-3" />}
+                <span>{copiedMessage ? 'copied' : 'copy text'}</span>
+              </button>
+            </div>
+            <p className="whitespace-pre-line font-mono text-[11px] text-slate-100/95 leading-normal">
+              {shareMessageText}
+            </p>
+          </div>
         </div>
 
         <div className="space-y-3">
@@ -502,8 +531,17 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsers
             <span>Share on WhatsApp</span>
           </button>
 
-          {/* Secondary Share Actions */}
+          {/* Secondary Share Actions: Telegram & Share App (Native) */}
           <div className="grid grid-cols-2 gap-2">
+            <button
+              id="share-telegram-btn"
+              onClick={handleTelegramShare}
+              className="flex items-center justify-center gap-1.5 rounded-xl bg-sky-500 hover:bg-sky-600 active:scale-[0.99] py-2.5 px-3 text-xs font-bold text-white transition-all shadow-sm cursor-pointer"
+            >
+              <Send className="h-3.5 w-3.5 text-white" />
+              <span>Share on Telegram</span>
+            </button>
+
             <button
               id="share-native-btn"
               onClick={handleNativeShare}
@@ -512,31 +550,22 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsers
               <Share2 className="h-3.5 w-3.5 text-indigo-200" />
               <span>Share App</span>
             </button>
-
-            <button
-              id="share-telegram-btn"
-              onClick={handleTelegramShare}
-              className="flex items-center justify-center gap-1.5 rounded-xl bg-indigo-700/80 border border-indigo-500/50 py-2.5 px-3 text-xs font-semibold text-white hover:bg-indigo-700 transition-colors cursor-pointer"
-            >
-              <Send className="h-3.5 w-3.5 text-sky-200" />
-              <span>Telegram</span>
-            </button>
           </div>
 
           <button
-            id="copy-playstore-link-btn"
-            onClick={copyPlayStoreLink}
+            id="copy-store-link-btn"
+            onClick={copyStoreLink}
             className="w-full flex items-center justify-center gap-1.5 py-1 text-xs font-medium text-indigo-200 hover:text-white transition-colors cursor-pointer"
           >
             {copiedLink ? (
               <>
                 <CheckCheck className="h-3.5 w-3.5 text-emerald-300" />
-                <span className="text-emerald-200">Play Store Link Copied</span>
+                <span className="text-emerald-200">Microsoft Store Link Copied</span>
               </>
             ) : (
               <>
                 <ExternalLink className="h-3.5 w-3.5 text-indigo-300" />
-                <span>Copy direct Play Store URL</span>
+                <span>Copy direct Microsoft Store URL</span>
               </>
             )}
           </button>
@@ -665,12 +694,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, userRank, totalUsers
             Community Guidelines
           </span>
           <a
-            href={PLAY_STORE_URL}
+            href={MICROSOFT_STORE_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1 text-xs font-bold text-indigo-600 hover:text-indigo-700"
           >
-            <span>Google Play</span>
+            <span>Microsoft Store</span>
             <ExternalLink className="h-3 w-3" />
           </a>
         </div>
